@@ -1,0 +1,12 @@
+.todayWeather {
+    grid-area: todayContainer;
+    padding: 20px;
+    border-radius: 10px;
+    border: 4px solid navy;
+    box-sizing: border-box;
+    width: 500px;
+    height: 300px;
+    background-color: aliceblue;
+    font-size: 18px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}

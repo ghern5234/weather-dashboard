@@ -26,7 +26,7 @@ function appendToHistory(search) {
 
 }
 
-
+//Function to fetch latitude and longitude of searched city
 async function geoCoordinates(city) {
   try {
     const response = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=0ddbdd01e0d6ab99523811f618c306be`)
@@ -37,41 +37,72 @@ async function geoCoordinates(city) {
         lon: data[0].lon,
     }
     console.log(parsedData);
-    return parsedData
+
+    todayForcast(parsedData.lat, parsedData.lon)
+    
   }
   catch (error){
    console.error("Error fetching data", error)
   }
 }
 
-geoCoordinates('london');
 
-function init() {
-    const searchedLocations = JSON.parse(localStorage.getItem('locations'));
 
-    if (searchedLocations.length === 0) {
-        return;
-    }
+// function init() {
+//     const searchedLocations = JSON.parse(localStorage.getItem('search-history'));
+
+//     if (searchedLocations.length === 0) {
+//         return;
+//     }
     
-    for (const location of searchedLocations) {
-        console.log(location)
+//     for (const location of searchedLocations) {
+//         console.log(location)
 
-    } 
-};
-
-init();
+//     } 
+// };
 
 
+async function todayForcast(lat, lon) {
+    try {
+      const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=0ddbdd01e0d6ab99523811f618c306be`)
+      const data = await response.json()
+      console.log(data)
+
+      var day = dayjs()
+
+      const weatherHtml = `
+     <div>
+        <h3>${data.name}</h3>
+        <p>${day}</p>
+        <p>Temp: ${data.main.temp}</p>
+        <p>Humidity: </p>
+        <p>Wind Speed: </p>
+     </div>`
+ 
+     todayWeather.innerHTML = weatherHtml
+
+      
+    }
+    catch (error){
+     console.error("Error fetching data", error)
+    }
+
+  }
 
 
 
 
+
+
+//Event listener on search button 
 citySearchBtn.addEventListener('click', async function(event) {
     console.log('working');
     event.preventDefault();
     const city = document.getElementById("searchInput").value;
     geoCoordinates(city);
+    // todayForcast();
     console.log(city);
+    // init();
 })
 
 

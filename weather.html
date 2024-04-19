@@ -35,7 +35,7 @@
     </div>
   </header>
   <main>
-        <div class="row">
+        <!-- <div class="row">
             <aside class="col-12 col-lg-3">
                 <h2>Past Searches</h2>
                 <div>
@@ -45,10 +45,34 @@
             <section class="col-12 col-lg-9" id="today">
              <h3>Today's Forecast</h3>
             </section>
-        </div>
+        </div> -->
+
+        <!-- <div class="flex flex-col w-full border-opacity-50">
+            <div class="grid h-auto flex-grow card bg-base-300 rounded-box place-items-center object-scale-down py-6 border-solid" id="today"></div>
+            <div class="divider">OR</div>
+            <div class="grid h-20 card bg-base-300 rounded-box place-items-center" id="fiveDay">content</div>
+          </div> -->
+
+          <div class="flex w-auto m-8">
+            <div class="grid h-20 flex-grow card bg-base-300 rounded-box place-items-center">
+                <h2>Past Searches</h2>
+            </div>
+            <div class="divider divider-horizontal">OR</div>
+            <div class="grid h-auto flex-grow card bg-base-300 rounded-box place-items-center object-scale-down py-6 border-solid" id="today">
+                <h2>Today's Forecast</h2>
+            </div>
+          </div>
+          <div class="flex flex-col w-auto border-opacity-50 m-8">
+            <div class="grid h-20 card bg-base-300 rounded-box place-items-center my-10">content</div>
+          
     </main>
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/dayjs@1.11.3/dayjs.min.js"
+      integrity="sha256-iu/zLUB+QgISXBLCW/mcDi/rnf4m4uEDO0wauy76x7U="
+      crossorigin="anonymous"
+    ></script>
     <script src="./assets/script.js"></script>
 </body>
 
