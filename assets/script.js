@@ -29,7 +29,7 @@ function appendToHistory(search) {
 //Function to fetch latitude and longitude of searched city
 async function geoCoordinates(city) {
   try {
-    const response = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=0ddbdd01e0d6ab99523811f618c306be`)
+    const response = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=0ddbdd01e0d6ab99523811f618c306be&`)
     const data = await response.json()
     console.log(data)
     const parsedData = {
@@ -64,22 +64,26 @@ async function geoCoordinates(city) {
 
 async function todayForcast(lat, lon) {
     try {
-      const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=0ddbdd01e0d6ab99523811f618c306be`)
+      const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=0ddbdd01e0d6ab99523811f618c306be&units=imperial`)
       const data = await response.json()
       console.log(data)
 
-      var day = dayjs()
+      var day = dayjs().format('DD/MM/YYYY')
+      var icon = data.weather[0].icon;
+      const url = `https://openweathermap.org/img/wn/${icon}.png`
 
       const weatherHtml = `
      <div>
-        <h3>${data.name}</h3>
-        <p>${day}</p>
-        <p>Temp: ${data.main.temp}</p>
-        <p>Humidity: </p>
-        <p>Wind Speed: </p>
+        <h3 class="text-lg">${data.name}</h3>
+        <p>(${day})</p>
+        <p>Temp: ${data.main.temp}°F</p>
+        <p>Humidity: ${data.main.humidity}%rh</p>
+        <p>Wind Speed: ${data.wind.speed}mph</p>
+        <img src="${url}"/>
      </div>`
  
      todayWeather.innerHTML = weatherHtml
+     todayWeather.classList.add("today-class") 
 
       
     }
