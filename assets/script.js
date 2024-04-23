@@ -2,15 +2,13 @@ const apiKey = '0ddbdd01e0d6ab99523811f618c306be';
 const baseUrl = 'https://api.openweathermap.org';
 // const searchedEl = document.getElementByID('searched-cities');
 
-// http://api.openweathermap.org/geo/1.0/direct?q={city name},{state code},{country code}&limit={limit}&appid={API key}
-// https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${APIKey}'
 
 
 const todayWeather = document.querySelector('#today');
 const fiveDayForecast = document.querySelector('#forecast');
 const searchHistoryContainer = document.querySelector('#search-history');
 const citySearchBtn = document.querySelector('#searchButton');
-const searchHistory = [];
+const searchHistory = JSON.parse(localStorage.getItem("search-history")) || [];
 
 //Function to store new searches to the search history to local storage
 function appendToHistory(search) {
@@ -39,6 +37,7 @@ async function geoCoordinates(city) {
     console.log(parsedData);
 
     todayForcast(parsedData.lat, parsedData.lon)
+    fiveForecast(parsedData.lat, parsedData.lon)
     
   }
   catch (error){
@@ -48,20 +47,20 @@ async function geoCoordinates(city) {
 
 
 
-// function init() {
-//     const searchedLocations = JSON.parse(localStorage.getItem('search-history'));
+function init() {
+    const searchedLocations = JSON.parse(localStorage.getItem('search-history'));
 
-//     if (searchedLocations.length === 0) {
-//         return;
-//     }
+    if (searchedLocations.length === 0) {
+        return;
+    }
     
-//     for (const location of searchedLocations) {
-//         console.log(location)
+    for (const location of searchedLocations) {
+        console.log(location)
 
-//     } 
-// };
+    } 
+};
 
-
+//Function to fetch and render today forecast
 async function todayForcast(lat, lon) {
     try {
       const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=0ddbdd01e0d6ab99523811f618c306be&units=imperial`)
@@ -85,6 +84,7 @@ async function todayForcast(lat, lon) {
      todayWeather.innerHTML = weatherHtml
      todayWeather.classList.add("today-class") 
 
+
       
     }
     catch (error){
@@ -93,7 +93,42 @@ async function todayForcast(lat, lon) {
 
   }
 
+//Function to fetch and render five day forecast
+async function fiveForecast(lat, lon) {
+  try {const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=0ddbdd01e0d6ab99523811f618c306be&units=imperial`)
+  const data = await response.json();
+  console.log(data);
 
+  var day = dayjs().format('DD/MM/YYYY')
+  var icon = data.weather[0].icon;
+  const url = `https://openweathermap.org/img/wn/${icon}.png`
+
+  const weatherHtml = `
+ <div>
+    <h3 class="text-lg">${data.name}</h3>
+    <p>(${day})</p>
+    <p>Temp: ${data.main.temp}°F</p>
+    <p>Humidity: ${data.main.humidity}%rh</p>
+    <p>Wind Speed: ${data.wind.speed}mph</p>
+    <img src="${url}"/>
+ </div>`
+
+ //Need to iterate through the arrays and grab the data from arrays [1]-[5] and create a card for each one
+
+ fiveWeather.innerHTML = weatherHtml
+//  fiveWeather.classList.add("today-class") 
+}
+catch (error){
+  console.error("Error fething the data", error)
+}
+}
+
+
+//Function to render search history
+function renderSearchHistory() {
+  searchHistoryContainer = "";
+
+}
 
 
 
@@ -104,7 +139,7 @@ citySearchBtn.addEventListener('click', async function(event) {
     event.preventDefault();
     const city = document.getElementById("searchInput").value;
     geoCoordinates(city);
-    // todayForcast();
+    appendToHistory(city);
     console.log(city);
     // init();
 })
