@@ -20,6 +20,7 @@ function appendToHistory(search) {
     searchHistory.push(search);
     //Convert search history value to JSON and store to local storage
     localStorage.setItem("search-history", JSON.stringify(searchHistory));
+    renderSearchHistory();
 
 
 }
@@ -72,16 +73,16 @@ async function todayForcast(lat, lon) {
       const url = `https://openweathermap.org/img/wn/${icon}.png`
 
       const weatherHtml = `
-     <div>
+     <div class="border-solid border-4 border-gray-600 p-6 rounded-md">
         <h3 class="text-lg">${data.name}</h3>
         <p>(${day})</p>
         <p>Temp: ${data.main.temp}°F</p>
         <p>Humidity: ${data.main.humidity}%rh</p>
         <p>Wind Speed: ${data.wind.speed}mph</p>
-        <img src="${url}"/>
+        <img class="object-center" src="${url}"/>
      </div>`
  
-     todayWeather.innerHTML = weatherHtml
+     todayWeather.innerHTML += weatherHtml
      todayWeather.classList.add("today-class") 
 
 
@@ -99,34 +100,59 @@ async function fiveForecast(lat, lon) {
   const data = await response.json();
   console.log(data);
 
-  var day = dayjs().format('DD/MM/YYYY')
-  var icon = data.weather[0].icon;
-  const url = `https://openweathermap.org/img/wn/${icon}.png`
+  // const filteredArray = data.list.filter((day) => day.dt_txt.includes("12:00:00"))
+  //       console.log(filteredArray)
 
-  const weatherHtml = `
- <div>
-    <h3 class="text-lg">${data.name}</h3>
-    <p>(${day})</p>
-    <p>Temp: ${data.main.temp}°F</p>
-    <p>Humidity: ${data.main.humidity}%rh</p>
-    <p>Wind Speed: ${data.wind.speed}mph</p>
-    <img src="${url}"/>
- </div>`
+  const filteredArray = [];
 
- //Need to iterate through the arrays and grab the data from arrays [1]-[5] and create a card for each one
 
- fiveWeather.innerHTML = weatherHtml
-//  fiveWeather.classList.add("today-class") 
+  for(let day of data.list){
+    if (day.dt_txt.includes("12:00:00")){
+      const card = fiveDayCard(day)
+      fiveDayForecast.innerHTML += card;
+    }
+  }
+  
 }
 catch (error){
   console.error("Error fething the data", error)
 }
 }
 
+//Function to render fiveday forecast cards
+function fiveDayCard(day){
+  var icon = day.weather[0].icon;
+  const url = `https://openweathermap.org/img/wn/${icon}.png`
+  console.log(day)
+  return `<div class="border-solid border-4 border-gray-600 p-6 rounded-md">
+     <p>(${formatDate(day.dt_txt)})</p>
+     <p>Temp: ${day.main.temp}°F</p>
+     <p>Humidity: ${day.main.humidity}%rh</p>
+     <p>Wind Speed: ${day.wind.speed}mph</p>
+     <img src="${url}"/>
+  </div>`
+ }
+
+
+//Function to format date
+function formatDate(date) {
+  return dayjs(date.split(" ")[0]).format('DD/MM/YYYY')
+}
+
 
 //Function to render search history
-function renderSearchHistory() {
-  searchHistoryContainer = "";
+function renderSearchHistory(searchHistory) {
+  
+
+
+  for(search of searchHistory){
+    localStorage.getItem("search-history", )
+    
+    const searchHistoryHtml= `
+    <div></div>
+    ` 
+
+  }
 
 }
 
