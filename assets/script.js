@@ -6,24 +6,63 @@ const baseUrl = 'https://api.openweathermap.org';
 
 const todayWeather = document.querySelector('#today');
 const fiveDayForecast = document.querySelector('#forecast');
-const searchHistoryContainer = document.querySelector('#search-history');
+const searchHistoryContainer = document.querySelector('#searchHistoryContainer');
 const citySearchBtn = document.querySelector('#searchButton');
 const searchHistory = JSON.parse(localStorage.getItem("search-history")) || [];
 
 //Function to store new searches to the search history to local storage
-function appendToHistory(search) {
+function appendToHistory(city) {
    //Checks if the search exists in search history, if so it ends the function
-    if (searchHistory.indexOf(search) !== -1 ){
-        return;
-    }
-    //Adds new search to search history value
-    searchHistory.push(search);
+    if (!searchHistory.includes(city)){
+    searchHistory.push(city);
     //Convert search history value to JSON and store to local storage
     localStorage.setItem("search-history", JSON.stringify(searchHistory));
+
+    removeStringDuplicates();
+    }
+    console.log(searchHistory)
+   
     renderSearchHistory();
 
-
 }
+
+//Function to render search history
+function renderSearchHistory() {
+  
+  const searchedEl = JSON.parse(localStorage.getItem("search-history")) || [];
+  const container = document.getElementById('searchHistoryContainer')
+
+  // container.innerHTML = '';
+  
+  for(let i = 0; i < searchedEl.length; i++){
+    console.log(searchedEl[i])
+    
+    let buttonEl = document.createElement('button')
+    buttonEl.classList.add('btn','m-1', 'w-full', 'border-gray-600', 'p-6')
+    buttonEl.textContent = searchedEl[i]
+    container.appendChild(buttonEl)
+
+  }
+
+  }
+
+// Function to prevent repeat search buttons
+function removeStringDuplicates(searchHistory) {
+  const uniqueSet = new Set(); // A Set to store unique strings
+  const result = []; // This will hold the deduplicated array
+
+  // Iterate through the array of strings
+  searchHistory.forEach((str) => {
+    // If the string is not in the Set, add it to both the Set and the result array
+    if (!uniqueSet.has(str)) {
+      uniqueSet.add(str);
+      result.push(str);
+    }
+  });
+
+  return result; // Return the array with duplicates removed
+}
+
 
 //Function to fetch latitude and longitude of searched city
 async function geoCoordinates(city) {
@@ -48,18 +87,6 @@ async function geoCoordinates(city) {
 
 
 
-function init() {
-    const searchedLocations = JSON.parse(localStorage.getItem('search-history'));
-
-    if (searchedLocations.length === 0) {
-        return;
-    }
-    
-    for (const location of searchedLocations) {
-        console.log(location)
-
-    } 
-};
 
 //Function to fetch and render today forecast
 async function todayForcast(lat, lon) {
@@ -73,7 +100,7 @@ async function todayForcast(lat, lon) {
       const url = `https://openweathermap.org/img/wn/${icon}.png`
 
       const weatherHtml = `
-     <div class="border-solid border-4 border-gray-600 p-6 rounded-md">
+     <div class="border-solid border-4 border-black p-6 rounded-md bg-sky-600 text-white">
         <h3 class="text-lg">${data.name}</h3>
         <p>(${day})</p>
         <p>Temp: ${data.main.temp}°F</p>
@@ -100,9 +127,6 @@ async function fiveForecast(lat, lon) {
   const data = await response.json();
   console.log(data);
 
-  // const filteredArray = data.list.filter((day) => day.dt_txt.includes("12:00:00"))
-  //       console.log(filteredArray)
-
   const filteredArray = [];
 
 
@@ -124,7 +148,7 @@ function fiveDayCard(day){
   var icon = day.weather[0].icon;
   const url = `https://openweathermap.org/img/wn/${icon}.png`
   console.log(day)
-  return `<div class="border-solid border-4 border-gray-600 p-6 rounded-md">
+  return `<div class="border-solid border-4 border-gray-600 p-6 rounded-md bg-sky-600 text-white">
      <p>(${formatDate(day.dt_txt)})</p>
      <p>Temp: ${day.main.temp}°F</p>
      <p>Humidity: ${day.main.humidity}%rh</p>
@@ -140,22 +164,6 @@ function formatDate(date) {
 }
 
 
-//Function to render search history
-function renderSearchHistory(searchHistory) {
-  
-
-
-  for(search of searchHistory){
-    localStorage.getItem("search-history", )
-    
-    const searchHistoryHtml= `
-    <div></div>
-    ` 
-
-  }
-
-}
-
 
 
 
@@ -166,9 +174,7 @@ citySearchBtn.addEventListener('click', async function(event) {
     const city = document.getElementById("searchInput").value;
     geoCoordinates(city);
     appendToHistory(city);
-    console.log(city);
-    // init();
+  
 })
 
-
-// https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={API key}
+renderSearchHistory();
