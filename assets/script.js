@@ -18,11 +18,10 @@ function appendToHistory(city) {
     searchHistory.push(city);
     //Convert search history value to JSON and store to local storage
     localStorage.setItem("search-history", JSON.stringify(searchHistory));
-
-    removeStringDuplicates();
+    
+    newButton(city);
   }
   console.log(searchHistory);
-  renderSearchHistory();
 }
 
 //Function to render search history
@@ -39,26 +38,21 @@ function renderSearchHistory() {
     buttonEl.id = "historyButton";
     buttonEl.classList.add("btn", "m-1", "w-full", "border-gray-600", "p-6");
     buttonEl.textContent = searchedEl[i];
+    buttonEl.addEventListener("click", function (event){recallSearch(event)})
     container.appendChild(buttonEl);
   }
 
 }
 
-// Function to prevent repeat search buttons
-function removeStringDuplicates(searchHistory) {
-  const uniqueSet = new Set(); // A Set to store unique strings
-  const result = []; // This will hold the deduplicated array
-
-  // Iterate through the array of strings
-  searchHistory.forEach((str) => {
-    // If the string is not in the Set, add it to both the Set and the result array
-    if (!uniqueSet.has(str)) {
-      uniqueSet.add(str);
-      result.push(str);
-    }
-  });
-
-  return result; // Return the array with duplicates removed
+//Function to append new search button
+function newButton(city) {
+  const container = document.getElementById("searchHistoryContainer");
+  let buttonEl = document.createElement("button");
+buttonEl.id = "historyButton";
+buttonEl.classList.add("btn", "m-1", "w-full", "border-gray-600", "p-6");
+buttonEl.textContent = city;
+buttonEl.addEventListener("click", function (event){recallSearch(event)})
+container.appendChild(buttonEl);
 }
 
 //Function to fetch latitude and longitude of searched city
@@ -163,11 +157,12 @@ citySearchBtn.addEventListener("click", async function (event) {
 });
 
 //Event listener that will re-render the weather information for a past search if the button is clicked
-// historyButton.addEventListener("click", async function(event){
-//   event.preventDefault()
-//   const city = searchHistory[i].value.trim();
-//   geoCoordinates(city);
 
-// })
+async function recallSearch(event){
+  event.preventDefault
+  const city = event.target.value.trim();
+  geoCoordinates(city);
+console.log(event.target)
+}
 
 renderSearchHistory();
