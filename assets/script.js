@@ -6,12 +6,10 @@ const todayWeather = document.querySelector("#today");
 const fiveDayForecast = document.querySelector("#forecast");
 const searchHistoryContainer = document.querySelector("#searchHistoryContainer");
 const citySearchBtn = document.querySelector("#searchButton");
+const pastSearchButton = document.querySelector("#historyButton");
 const searchHistory = JSON.parse(localStorage.getItem("search-history")) || [];
 
-
-const pastSearchButton = document.getElementById("historyButton");
-
-//Function to store new searches to the search history to local storage
+// A function to store new searches to the search history to local storage
 function appendToHistory(city) {
   //Checks if the search exists in search history, if so it ends the function
   if (!searchHistory.includes(city)) {
@@ -24,7 +22,7 @@ function appendToHistory(city) {
   console.log(searchHistory);
 }
 
-//Function to render search history
+// A function to render search history
 function renderSearchHistory() {
   const searchedEl = JSON.parse(localStorage.getItem("search-history")) || [];
   const container = document.getElementById("searchHistoryContainer");
@@ -44,18 +42,19 @@ function renderSearchHistory() {
 
 }
 
-//Function to append new search button
+// A function to append new search button
 function newButton(city) {
   const container = document.getElementById("searchHistoryContainer");
   let buttonEl = document.createElement("button");
 buttonEl.id = "historyButton";
 buttonEl.classList.add("btn", "m-1", "w-full", "border-gray-600", "p-6");
 buttonEl.textContent = city;
-buttonEl.addEventListener("click", function (event){recallSearch(event)})
+buttonEl.addEventListener("click", async function (event){recallSearch(event)})
 container.appendChild(buttonEl);
 }
 
-//Function to fetch latitude and longitude of searched city
+
+// A function to fetch latitude and longitude of searched city
 async function geoCoordinates(city) {
   try {
     const response = await fetch(
@@ -76,7 +75,8 @@ async function geoCoordinates(city) {
   }
 }
 
-//Function to fetch and render today forecast
+
+// A function to fetch and render today forecast
 async function todayForcast(lat, lon) {
   try {
     const response = await fetch(
@@ -106,7 +106,8 @@ async function todayForcast(lat, lon) {
   }
 }
 
-//Function to fetch and render five day forecast
+
+// A function to fetch and render five day forecast
 async function fiveForecast(lat, lon) {
   try {
     const response = await fetch(
@@ -128,7 +129,8 @@ async function fiveForecast(lat, lon) {
   }
 }
 
-//Function to render fiveday forecast cards
+
+// A function to render fiveday forecast cards
 function fiveDayCard(day) {
   var icon = day.weather[0].icon;
   const url = `https://openweathermap.org/img/wn/${icon}.png`;
@@ -142,12 +144,14 @@ function fiveDayCard(day) {
   </div>`;
 }
 
-//Function to format date
+
+// A function to format date
 function formatDate(date) {
   return dayjs(date.split(" ")[0]).format("DD/MM/YYYY");
 }
 
-//Event listener on search button
+
+// Event listener on search button
 citySearchBtn.addEventListener("click", async function (event) {
   console.log("working");
   event.preventDefault();
@@ -156,8 +160,8 @@ citySearchBtn.addEventListener("click", async function (event) {
   appendToHistory(city);
 });
 
-//Event listener that will re-render the weather information for a past search if the button is clicked
 
+// Event listener that will re-render the weather information for a past search if the button is clicked
 async function recallSearch(event){
   event.preventDefault
   const city = event.target.value.trim();
