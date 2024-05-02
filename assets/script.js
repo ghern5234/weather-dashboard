@@ -14,6 +14,17 @@ function appendToHistory(city) {
   //Checks if the search exists in search history, if so it ends the function
   if (!searchHistory.includes(city)) {
     searchHistory.push(city);
+
+    if(searchHistory.length > 5) {
+      const container = document.getElementById("searchHistoryContainer");
+      const removedCity = searchHistory.shift()
+      for( let i=0; i < container.children.length; i++) {
+        if(container.children[i].textContent == removedCity) {
+          container.removeChild(container.children[i])
+        }
+      }
+    } 
+
     //Convert search history value to JSON and store to local storage
     localStorage.setItem("search-history", JSON.stringify(searchHistory));
     
@@ -27,7 +38,6 @@ function renderSearchHistory() {
   const searchedEl = JSON.parse(localStorage.getItem("search-history")) || [];
   const container = document.getElementById("searchHistoryContainer");
 
-  // container.innerHTML = '';
 
   for (let i = 0; i < searchedEl.length; i++) {
     console.log(searchedEl[i]);
@@ -99,7 +109,7 @@ async function todayForcast(lat, lon) {
         <img class="object-center" src="${url}"/>
      </div>`;
 
-    todayWeather.innerHTML += weatherHtml;
+    todayWeather.innerHTML = weatherHtml;
     todayWeather.classList.add("today-class");
   } catch (error) {
     console.error("Error fetching data", error);
@@ -117,7 +127,7 @@ async function fiveForecast(lat, lon) {
     console.log(data);
 
     const filteredArray = [];
-
+    fiveDayForecast.innerHTML = ""
     for (let day of data.list) {
       if (day.dt_txt.includes("12:00:00")) {
         const card = fiveDayCard(day);
@@ -164,7 +174,7 @@ citySearchBtn.addEventListener("click", async function (event) {
 // Event listener that will re-render the weather information for a past search if the button is clicked
 async function recallSearch(event){
   event.preventDefault
-  const city = event.target.value.trim();
+  const city = event.target.textContent.trim();
   geoCoordinates(city);
 console.log(event.target)
 }
