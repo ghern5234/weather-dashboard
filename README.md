@@ -48,3 +48,14 @@ This application provides real-time weather information for cities around the wo
 [MIT]((https://opensource.org/licenses/MIT)) 
 
 Please refer to the [LICENSE](./LICENSE) file for more licensing information.
+
+
+
+
+
+
+
+
+![alt text](assets/images/WeatherDashboard.png)
+
+![alt text](assets/images/WeatherDashboard2.png)
