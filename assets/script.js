@@ -40,8 +40,6 @@ function renderSearchHistory() {
 
 
   for (let i = 0; i < searchedEl.length; i++) {
-    console.log(searchedEl[i]);
-
     let buttonEl = document.createElement("button");
     buttonEl.id = "historyButton";
     buttonEl.classList.add("btn", "m-1", "w-full", "border-gray-600", "p-6");
@@ -56,11 +54,12 @@ function renderSearchHistory() {
 function newButton(city) {
   const container = document.getElementById("searchHistoryContainer");
   let buttonEl = document.createElement("button");
-buttonEl.id = "historyButton";
-buttonEl.classList.add("btn", "m-1", "w-full", "border-gray-600", "p-6");
-buttonEl.textContent = city;
-buttonEl.addEventListener("click", async function (event){recallSearch(event)})
-container.appendChild(buttonEl);
+  
+  buttonEl.id = "historyButton";
+  buttonEl.classList.add("btn", "m-1", "w-full", "border-gray-600", "p-6");
+  buttonEl.textContent = city;
+  buttonEl.addEventListener("click", async function (event){recallSearch(event)})
+  container.appendChild(buttonEl);
 }
 
 
@@ -71,13 +70,11 @@ async function geoCoordinates(city) {
       `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=0ddbdd01e0d6ab99523811f618c306be&`
     );
     const data = await response.json();
-    console.log(data);
     const parsedData = {
       lat: data[0].lat,
       lon: data[0].lon,
     };
-    console.log(parsedData);
-
+    
     todayForcast(parsedData.lat, parsedData.lon);
     fiveForecast(parsedData.lat, parsedData.lon);
   } catch (error) {
@@ -93,14 +90,13 @@ async function todayForcast(lat, lon) {
       `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=0ddbdd01e0d6ab99523811f618c306be&units=imperial`
     );
     const data = await response.json();
-    console.log(data);
 
     var day = dayjs().format("DD/MM/YYYY");
     var icon = data.weather[0].icon;
     const url = `https://openweathermap.org/img/wn/${icon}.png`;
 
-    const weatherHtml = `
-     <div class="border-solid border-4 border-black p-6 rounded-md bg-sky-600 text-white">
+    const weatherHtml = `<h2 class="mb-4 text-xl font-bold text-center">Today's Forecast</h2>
+     <div class="border-solid border-4 border-black p-6 rounded-md bg-sky-500 text-white">
         <h3 class="text-lg">${data.name}</h3>
         <p>(${day})</p>
         <p>Temp: ${data.main.temp}°F</p>
@@ -124,7 +120,6 @@ async function fiveForecast(lat, lon) {
       `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=0ddbdd01e0d6ab99523811f618c306be&units=imperial`
     );
     const data = await response.json();
-    console.log(data);
 
     const filteredArray = [];
     fiveDayForecast.innerHTML = ""
@@ -144,8 +139,7 @@ async function fiveForecast(lat, lon) {
 function fiveDayCard(day) {
   var icon = day.weather[0].icon;
   const url = `https://openweathermap.org/img/wn/${icon}.png`;
-  console.log(day);
-  return `<div class="border-solid border-4 border-gray-600 p-6 rounded-md bg-sky-600 text-white">
+  return `<div class="border-solid border-4 border-gray-600 p-6 rounded-md bg-sky-500 text-white">
      <p>(${formatDate(day.dt_txt)})</p>
      <p>Temp: ${day.main.temp}°F</p>
      <p>Humidity: ${day.main.humidity}%rh</p>
@@ -163,7 +157,6 @@ function formatDate(date) {
 
 // Event listener on search button
 citySearchBtn.addEventListener("click", async function (event) {
-  console.log("working");
   event.preventDefault();
   const city = document.getElementById("searchInput").value;
   geoCoordinates(city);
@@ -176,7 +169,6 @@ async function recallSearch(event){
   event.preventDefault
   const city = event.target.textContent.trim();
   geoCoordinates(city);
-console.log(event.target)
 }
 
 renderSearchHistory();
