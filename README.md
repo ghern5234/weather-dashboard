@@ -51,10 +51,11 @@ Please refer to the [LICENSE](./LICENSE) file for more licensing information.
 
 
 
+##
 
 
 
-
+Link to live site: https://github.com/ghern5234/weather-dashboard.git
 
 ![alt text](assets/images/WeatherDashboard.png)
 
