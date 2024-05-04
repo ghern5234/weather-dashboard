@@ -67,7 +67,7 @@ function newButton(city) {
 async function geoCoordinates(city) {
   try {
     const response = await fetch(
-      `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=0ddbdd01e0d6ab99523811f618c306be&`
+      `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=0ddbdd01e0d6ab99523811f618c306be&`
     );
     const data = await response.json();
     const parsedData = {
